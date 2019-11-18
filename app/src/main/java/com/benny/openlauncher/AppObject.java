@@ -2,6 +2,8 @@ package com.benny.openlauncher;
 
 import android.app.Application;
 
+import io.branch.referral.Branch;
+
 public class AppObject extends Application {
     private static AppObject _instance;
 
@@ -13,5 +15,6 @@ public class AppObject extends Application {
     public void onCreate() {
         super.onCreate();
         _instance = this;
+        Branch.getAutoInstance(this);
     }
 }

@@ -124,6 +124,17 @@ dependencies {
     // Tools
     implementation "com.jakewharton:butterknife:${version_library_butterknife}"
 
+    // required for all Android apps
+    implementation 'io.branch.sdk.android:library:3.+'
+
+    // required if your app is in the Google Play Store
+    implementation 'com.google.android.gms:play-services-appindexing:9.+' // App indexing
+    implementation 'com.google.android.gms:play-services-ads:9+' // GAID matching
+
+    // optional
+    implementation 'com.android.support:customtabs:23.3.0' // Chrome Tab matching
+
+
     // Processors
     def anpros = ["com.jakewharton:butterknife-compiler:${version_library_butterknife}"]
     for (anpro in anpros) {

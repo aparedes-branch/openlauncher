@@ -15,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -64,9 +65,15 @@ import com.jakewharton.threetenabp.AndroidThreeTen;
 
 import net.gsantner.opoc.util.ContextUtils;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import io.branch.referral.Branch;
+import io.branch.referral.BranchError;
+import io.branch.referral.validators.IntegrationValidator;
 
 public final class HomeActivity extends Activity implements OnDesktopEditListener {
     public static final Companion Companion = new Companion();
@@ -493,6 +500,33 @@ public final class HomeActivity extends Activity implements OnDesktopEditListene
         _launcher = this;
 
         super.onStart();
+
+//        IntegrationValidator.validate(HomeActivity.this);
+//        Branch.enableSimulateInstalls();
+
+        //Branch branch = Branch.getInstance(getApplicationContext());
+        //JSONObject installParams = branch.getFirstReferringParams();
+
+        // Branch init
+        Branch.getInstance().initSession(new Branch.BranchReferralInitListener() {
+            @Override
+            public void onInitFinished(JSONObject referringParams, BranchError error) {
+                if (error == null) {
+                    Log.i("BRANCH SDK", referringParams.toString());
+                    // Retrieve deeplink keys from 'referringParams' and evaluate the values to determine where to route the user
+                    // Check '+clicked_branch_link' before deciding whether to use your Branch routing logic
+                } else {
+                    Log.i("BRANCH SDK", error.getMessage());
+                }
+            }
+        }, this.getIntent().getData(), this);
+
+        //Log.i("PACKAGE NAME", getApplicationContext().getPackageName());
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        this.setIntent(intent);
     }
 
     private void checkNotificationPermissions() {
